@@ -1,7 +1,6 @@
 import { defineStore } from 'pinia'
 import { onScopeDispose, ref, shallowRef } from 'vue'
 import type { Dashboard } from './dashboard'
-import { demo } from './demo'
 
 const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID?.trim()
 const deploymentId = import.meta.env.VITE_APPS_SCRIPT_DEPLOYMENT_ID?.trim()
@@ -14,7 +13,6 @@ export const configured = Boolean(clientId && deploymentId)
 
 export const useDashboard = defineStore('dashboard', () => {
   const data = shallowRef<Dashboard | null>(null)
-  const mode = ref<'demo' | 'live' | null>(null)
   const loading = ref(false)
   const error = ref('')
   const googleReady = ref(false)
@@ -103,7 +101,6 @@ export const useDashboard = defineStore('dashboard', () => {
       }
       if (controller.signal.aborted) return
       data.value = result
-      mode.value = 'live'
     } catch (failure) {
       if (!controller.signal.aborted) {
         error.value = failure instanceof Error ? failure.message : 'Не вдалося завантажити дані.'
@@ -121,17 +118,10 @@ export const useDashboard = defineStore('dashboard', () => {
     request = null
     token = null
     data.value = null
-    mode.value = null
     loading.value = false
     error.value = ''
   }
 
-  function openDemo() {
-    close()
-    mode.value = 'demo'
-    data.value = demo
-  }
-
   onScopeDispose(close)
-  return { data, mode, loading, error, googleReady, connect, refresh, close, openDemo }
+  return { data, loading, error, googleReady, connect, refresh, close }
 })

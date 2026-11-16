@@ -25,12 +25,12 @@ onMounted(() => dashboard.connect())
   <main class="shell">
     <header class="topbar">
       <div class="brand"><img src="/icon-192.png" width="33" height="33" alt="" /> Gym Bro</div>
-      <div v-if="dashboard.mode" class="flex flex-wrap justify-end gap-2">
-        <button v-if="dashboard.mode === 'live'" class="action" type="button" :disabled="dashboard.loading" @click="dashboard.refresh">
+      <div v-if="dashboard.data" class="flex flex-wrap justify-end gap-2">
+        <button class="action" type="button" :disabled="dashboard.loading" @click="dashboard.refresh">
           {{ dashboard.loading ? 'Читаємо…' : 'Оновити' }}
         </button>
-        <button class="action" type="button" @click="dashboard.close">
-          {{ dashboard.mode === 'demo' ? 'Закрити демо' : 'Вийти' }}
+        <button class="action" type="button" @click="dashboard.close(); active = 'day'">
+          Вийти
         </button>
       </div>
     </header>
@@ -45,9 +45,6 @@ onMounted(() => dashboard.connect())
         <button v-if="configured" class="action primary" type="button" :disabled="!dashboard.googleReady || dashboard.loading" @click="dashboard.refresh">
           {{ dashboard.loading ? 'Підключення…' : 'Увійти через Google' }}
         </button>
-        <button class="action" :class="{ primary: !configured }" :disabled="dashboard.loading" type="button" @click="active = 'day'; dashboard.openDemo()">
-          Переглянути демо
-        </button>
       </div>
       <p v-if="!configured" class="setup-note">Підключення до Google Sheets ще налаштовується.</p>
     </section>
@@ -58,7 +55,6 @@ onMounted(() => dashboard.connect())
           {{ tab.label }}
         </button>
       </nav>
-      <p v-if="dashboard.mode === 'demo'" class="demo-note">Демо · умовні дані</p>
 
       <section v-if="active === 'day'" class="screen">
         <div class="section-heading">

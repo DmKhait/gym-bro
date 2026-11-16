@@ -35,7 +35,6 @@ button:focus-visible, [tabindex]:focus-visible, summary:focus-visible { outline:
 .tabbar { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); padding: 4px; gap: 4px; border: 1px solid var(--line); border-radius: 13px; background: #171a15; }
 .tabbar button { border-radius: 9px; min-height: 44px; padding: 0 5px; color: var(--muted); font-size: .875rem; font-weight: 650; }
 .tabbar button[aria-pressed="true"] { background: var(--lime); color: #151a10; }
-.demo-note { margin-top: 12px; color: #cbd6b1; font-size: .8rem; }
 .screen { margin-top: 24px; }
 .section-heading { display: flex; justify-content: space-between; align-items: flex-end; gap: 12px; margin-bottom: 18px; }
 .section-heading h1 { font-size: clamp(2.25rem, 7vw, 3.5rem); }
