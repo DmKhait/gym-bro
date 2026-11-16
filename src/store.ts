@@ -5,7 +5,11 @@ import { demo } from './demo'
 
 const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID?.trim()
 const deploymentId = import.meta.env.VITE_APPS_SCRIPT_DEPLOYMENT_ID?.trim()
-const scope = 'https://www.googleapis.com/auth/spreadsheets.readonly'
+// scripts.run requires an accepted execution scope alongside Sheets read access.
+const scopes = [
+  'https://www.googleapis.com/auth/spreadsheets.readonly',
+  'https://www.googleapis.com/auth/userinfo.email',
+] as const
 export const configured = Boolean(clientId && deploymentId)
 
 export const useDashboard = defineStore('dashboard', () => {
@@ -26,11 +30,11 @@ export const useDashboard = defineStore('dashboard', () => {
     script.onload = () => {
       oauth = google.accounts.oauth2.initTokenClient({
         client_id: clientId,
-        scope,
+        scope: scopes.join(' '),
         include_granted_scopes: false,
         callback(response) {
           if (!loading.value) return
-          if (response.error || !google.accounts.oauth2.hasGrantedAllScopes(response, scope)) {
+          if (response.error || !google.accounts.oauth2.hasGrantedAllScopes(response, ...scopes)) {
             loading.value = false
             error.value = 'Google не надав доступ для читання. Спробуй увійти ще раз.'
             return
